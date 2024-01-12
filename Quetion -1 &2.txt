@@ -1,0 +1,37 @@
+Quetion -1 
+
+SELECT
+  "to" AS receiver,
+  SUM(value) AS total_tokens_received
+FROM erc20_optimism.evt_Transfer
+WHERE
+  contract_address = 0x4200000000000000000000000000000000000042
+  AND (
+    "from" = 0x5B8F3fb479571Eca6A06240b21926Db586Cdf10f
+    OR "to" = 0x5B8F3fb479571Eca6A06240b21926Db586Cdf10f
+  )
+GROUP BY
+  1
+ORDER BY
+  total_tokens_received DESC
+LIMIT 10
+
+
+
+
+Quetion - 2 
+
+
+SELECT
+  DATE(block_date) AS transaction_date,
+  SUM(value) AS total_transaction_value,
+  SUM(SUM(value)) OVER (ORDER BY DATE(block_date)) AS cumulative_transaction_value
+FROM ethereum.transactions
+WHERE
+  DATE(block_date) BETWEEN CAST('2023-11-01' AS TIMESTAMP) AND CAST('2023-11-30' AS TIMESTAMP)
+GROUP BY
+  1
+ORDER BY
+  transaction_date
+
+
